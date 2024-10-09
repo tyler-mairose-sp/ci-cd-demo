@@ -1,0 +1,34 @@
+{
+  "attributes": {
+    "input": {
+      "attributes": {
+        "values": [
+          {
+            "attributes": {
+              "begin": 0,
+              "end": 1,
+              "input": {
+                "attributes": {
+                  "name": "firstname"
+                },
+                "type": "identityAttribute"
+              }
+            },
+            "type": "substring"
+          },
+          {
+            "attributes": {
+              "name": "lastname"
+            },
+            "type": "identityAttribute"
+          }
+        ]
+      },
+      "type": "concat"
+    }
+  },
+  "id": "bb2fefc7-0a47-4753-b63b-ca891eca858d",
+  "internal": false,
+  "name": "Derive FirstInitial+LastName In Upper",
+  "type": "upper"
+}

@@ -1,0 +1,42 @@
+{
+  "attributes": {
+    "input": {
+      "attributes": {
+        "input": {
+          "attributes": {
+            "values": [
+              {
+                "attributes": {
+                  "name": "cloudLifecycleState"
+                },
+                "type": "identityAttribute"
+              },
+              "-",
+              {
+                "attributes": {
+                  "name": "accountType"
+                },
+                "type": "identityAttribute"
+              }
+            ]
+          },
+          "type": "concat"
+        }
+      },
+      "type": "lower"
+    },
+    "table": {
+      "active-": "licensed",
+      "active-bot": "light",
+      "active-serviceAccount": "light",
+      "default": "unlicensed",
+      "inactive-": "unlicensed",
+      "loa-": "licensed",
+      "prehire-": "licensed"
+    }
+  },
+  "id": "a4f53b0f-f9ed-4572-b305-01dca24db495",
+  "internal": false,
+  "name": "Determine License2",
+  "type": "lookup"
+}
