@@ -1,0 +1,7 @@
+{
+    "name": "Add stuff",
+    "type": "static",
+    "attributes": {
+        "value": "Testing"
+    }
+}
