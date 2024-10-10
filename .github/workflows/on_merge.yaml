@@ -73,6 +73,7 @@ jobs:
           for modified_file in ${modified_transforms[@]}; do
             if [[ $modified_file == transform_files/* ]]; then
                 echo "Do something with this ${modified_file}."
+                sail transform update -f ${modified_file}
             else
               echo "Skipping ${modified_file}, not under transform_files/."
             fi    
