@@ -20,18 +20,6 @@ jobs:
         with:
           ref: ${{ github.ref }}
           submodules: 'true'
-      - name: Set Environment Variables based on branch
-        run: |
-          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            echo "Setting environment for main branch"
-            echo "SAIL_CLIENT_ID=${{ secrets.PROD_TENANT_CLIENT_ID }}" >> $GITHUB_ENV
-            echo "SAIL_CLIENT_SECRET=${{ secrets.PROD_TENANT_CLIENT_SECRET }}" >> $GITHUB_ENV
-            echo "SAIL_BASE_URL=${{ secrets.PROD_TENANT_BASE_URL }}" >> $GITHUB_ENV
-          elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-            echo "SAIL_CLIENT_ID=${{ secrets.DEV_TENANT_CLIENT_ID }}" >> $GITHUB_ENV
-            echo "SAIL_CLIENT_SECRET=${{ secrets.DEV_TENANT_CLIENT_SECRET }}" >> $GITHUB_ENV
-            echo "SAIL_BASE_URL=${{ secrets.DEV_TENANT_BASE_URL }}" >> $GITHUB_ENV
-          fi
 
       - name: Download sailpoint-cli package
         run: |
@@ -43,4 +31,14 @@ jobs:
     
       - name:
         run: |
+         if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "Setting environment for main branch"
+            echo "SAIL_CLIENT_ID=${{ secrets.PROD_TENANT_CLIENT_ID }}" >> $GITHUB_ENV
+            echo "SAIL_CLIENT_SECRET=${{ secrets.PROD_TENANT_CLIENT_SECRET }}" >> $GITHUB_ENV
+            echo "SAIL_BASE_URL=${{ secrets.PROD_TENANT_BASE_URL }}" >> $GITHUB_ENV
+          elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+            echo "SAIL_CLIENT_ID=${{ secrets.DEV_TENANT_CLIENT_ID }}" >> $GITHUB_ENV
+            echo "SAIL_CLIENT_SECRET=${{ secrets.DEV_TENANT_CLIENT_SECRET }}" >> $GITHUB_ENV
+            echo "SAIL_BASE_URL=${{ secrets.DEV_TENANT_BASE_URL }}" >> $GITHUB_ENV
+          fi
           test/bats/bin/bats --tap test
