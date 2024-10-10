@@ -20,6 +20,7 @@ jobs:
         with:
           ref: ${{ github.ref }}
           submodules: 'true'
+
       - name: Set Environment Variables based on branch
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
@@ -33,6 +34,16 @@ jobs:
             echo "SAIL_BASE_URL=${{ secrets.DEV_TENANT_BASE_URL }}" >> $GITHUB_ENV
           fi
 
+      - name: Download sailpoint-cli package
+        run: |
+          wget https://github.com/sailpoint-oss/sailpoint-cli/releases/download/${{ env.CLI_VERSION }}/sail_${{ env.CLI_VERSION }}_linux_amd64.deb
+  
+      - name: Install sailpoint-cli
+        run: |
+          sudo dpkg -i sail_${{ env.CLI_VERSION }}_linux_amd64.deb
+
+
+
       - id: files
         uses: jitterbit/get-changed-files@v1
         with:
@@ -42,6 +53,8 @@ jobs:
           for added_file in ${added_transforms[@]}; do
             if [[ $added_file == transform_files/* ]]; then
                 echo "Do something with this ${added_file}."
+
+                sail transform create -f ${added_file}
             else
               echo "Skipping ${added_file}, not under transform_files/."
             fi          

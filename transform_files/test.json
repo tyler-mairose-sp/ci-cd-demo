@@ -1,6 +1,7 @@
 {
-    "id": "bd237190-f80b-4ee2-a601-9b98fc76250d",
-    "internal": true,
-    "name": "Remove Diacritical Marks",
-    "type": "decomposeDiacriticalMarks"
+    "name": "Add stuff",
+    "type": "static",
+    "attributes": {
+        "value": "Testing"
+    }
 }
