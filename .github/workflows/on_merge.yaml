@@ -1,0 +1,39 @@
+name: "Push Transforms"
+
+env:
+  CLI_VERSION: 2.1.8
+
+on:
+  pull_request:
+    branches:
+      - dev
+    paths:
+      - "transform_files/**"
+  workflow_dispatch:
+
+jobs:
+  push_transforms:
+    name: Push Transforms
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+          submodules: 'true'
+
+      - id: files
+        uses: jitterbit/get-changed-files@v1
+        with:
+          format: 'json'
+      - run: |
+          readarray -t added_transforms <<<"$(jq -r '.[]' <<<'${{ steps.files.outputs.added }}')"
+          for added_file in ${added_transforms[@]}; do
+            echo "Do something with this ${added_file}."
+          done
+      - run: |
+          readarray -t modified_transforms <<<"$(jq -r '.[]' <<<'${{ steps.files.outputs.modified }}')"
+          for modified_file in ${modified_transforms[@]}; do
+            echo "Do something with this ${modified_file}."
+          done
+    
