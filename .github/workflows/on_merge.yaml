@@ -59,14 +59,7 @@ jobs:
             if [[ $added_file == transform_files/* ]]; then
                 echo "Do something with this ${added_file}."
 
-                TRANSFORM_ID=$(sail transform create -f ${added_file})
-
-                if [ ! -f ${added_file} ]; then
-                  echo "{}" > ${added_file}
-                fi
-                
-                jq --arg id "$TRANSFORM_ID" '.id = $id' ${added_file} > temp.json && mv temp.json ${added_file}
-
+                sail transform create -f ${added_file}
             else
               echo "Skipping ${added_file}, not under transform_files/."
             fi          
@@ -83,6 +76,9 @@ jobs:
             fi    
           done
     
+      - name: Sync Transforms
+        run: |
+          sail transform download    
     
       - name: Commit changes and create new version tag
         if: steps.addNewTransforms.outcome == 'success'
