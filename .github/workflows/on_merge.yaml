@@ -29,11 +29,19 @@ jobs:
       - run: |
           readarray -t added_transforms <<<"$(jq -r '.[]' <<<'${{ steps.files.outputs.added }}')"
           for added_file in ${added_transforms[@]}; do
-            echo "Do something with this ${added_file}."
+            if [[ $added_file == transform_files/* ]]; then
+                echo "Do something with this ${added_file}."
+            else
+              echo "Skipping ${added_file}, not under transform_files/."
+            fi          
           done
       - run: |
           readarray -t modified_transforms <<<"$(jq -r '.[]' <<<'${{ steps.files.outputs.modified }}')"
           for modified_file in ${modified_transforms[@]}; do
-            echo "Do something with this ${modified_file}."
+            if [[ $modified_file == transform_files/* ]]; then
+                echo "Do something with this ${modified_file}."
+            else
+              echo "Skipping ${modified_file}, not under transform_files/."
+            fi    
           done
     
