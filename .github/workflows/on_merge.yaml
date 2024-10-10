@@ -4,8 +4,7 @@ env:
   CLI_VERSION: 2.1.8
 
 on:
-  workflow_dispatch:
-  pull_request:
+  push:
     branches:
       - dev
     paths:
@@ -23,12 +22,12 @@ jobs:
           submodules: 'true'
       - name: Set Environment Variables based on branch
         run: |
-          if [[ "${{ github.ref }}" == "main" ]]; then
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "Setting environment for main branch"
             echo "SAIL_CLIENT_ID=${{ secrets.PROD_TENANT_CLIENT_ID }}" >> $GITHUB_ENV
             echo "SAIL_CLIENT_SECRET=${{ secrets.PROD_TENANT_CLIENT_SECRET }}" >> $GITHUB_ENV
             echo "SAIL_BASE_URL=${{ secrets.PROD_TENANT_BASE_URL }}" >> $GITHUB_ENV
-          elif [[ "${{ github.ref }}" == "dev" ]]; then
+          elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
             echo "SAIL_CLIENT_ID=${{ secrets.DEV_TENANT_CLIENT_ID }}" >> $GITHUB_ENV
             echo "SAIL_CLIENT_SECRET=${{ secrets.DEV_TENANT_CLIENT_SECRET }}" >> $GITHUB_ENV
             echo "SAIL_BASE_URL=${{ secrets.DEV_TENANT_BASE_URL }}" >> $GITHUB_ENV
