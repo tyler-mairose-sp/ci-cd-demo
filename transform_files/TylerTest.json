@@ -1,7 +1,9 @@
 {
-    "name":"TylerTest",
-    "type": "static",
-    "attributes": {
-        "value": "TestingValueUpdated"
-    }
+  "attributes": {
+    "value": "TestingValueUpdated"
+  },
+  "id": "2ae7618e-8e37-4c46-b02d-aa4015d31bbb",
+  "internal": false,
+  "name": "TylerTest",
+  "type": "static"
 }
