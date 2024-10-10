@@ -4,12 +4,12 @@ env:
   CLI_VERSION: 2.1.8
 
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - dev
     paths:
       - "transform_files/**"
-  workflow_dispatch:
 
 jobs:
   push_transforms:
