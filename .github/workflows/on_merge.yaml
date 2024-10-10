@@ -42,6 +42,7 @@ jobs:
       - name: Install sailpoint-cli
         run: |
           sudo dpkg -i sail_${{ env.CLI_VERSION }}_linux_amd64.deb
+          rm sail_${{ env.CLI_VERSION }}_linux_amd64.deb
 
 
 

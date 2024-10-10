@@ -1,5 +1,5 @@
 {
-    "name": "Test Transform",
+    "name": "Static",
     "type": "static",
     "attributes": {
         "value": "Testing"
