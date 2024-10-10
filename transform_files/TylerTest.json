@@ -1,0 +1,7 @@
+{
+    "name":"TylerTest",
+    "type": "static",
+    "attributes": {
+        "value": "TestingValue"
+    }
+}
