@@ -48,18 +48,30 @@ jobs:
         uses: jitterbit/get-changed-files@v1
         with:
           format: 'json'
-      - run: |
+          
+      - name: Add New Transforms
+        id: addNewTransforms
+        run: |
           readarray -t added_transforms <<<"$(jq -r '.[]' <<<'${{ steps.files.outputs.added }}')"
           for added_file in ${added_transforms[@]}; do
             if [[ $added_file == transform_files/* ]]; then
                 echo "Do something with this ${added_file}."
 
-                sail transform create -f ${added_file}
+                TRANSFORM_ID=$(sail transform create -f ${added_file})
+
+                if [ ! -f ${added_file} ]; then
+                  echo "{}" > ${added_file}
+                fi
+                
+                jq --arg id "$TRANSFORM_ID" '.id = $id' ${added_file} > temp.json && mv temp.json ${added_file}
+
             else
               echo "Skipping ${added_file}, not under transform_files/."
             fi          
           done
-      - run: |
+
+      - name: Update Transforms
+        run: |
           readarray -t modified_transforms <<<"$(jq -r '.[]' <<<'${{ steps.files.outputs.modified }}')"
           for modified_file in ${modified_transforms[@]}; do
             if [[ $modified_file == transform_files/* ]]; then
@@ -69,3 +81,9 @@ jobs:
             fi    
           done
     
+    
+      - name: Commit changes and create new version tag
+        if: steps.addNewTransforms.outcome == 'success'
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Sync transforms
