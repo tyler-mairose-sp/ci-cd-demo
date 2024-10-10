@@ -32,6 +32,7 @@ jobs:
             echo "SAIL_CLIENT_ID=${{ secrets.DEV_TENANT_CLIENT_ID }}" >> $GITHUB_ENV
             echo "SAIL_CLIENT_SECRET=${{ secrets.DEV_TENANT_CLIENT_SECRET }}" >> $GITHUB_ENV
             echo "SAIL_BASE_URL=${{ secrets.DEV_TENANT_BASE_URL }}" >> $GITHUB_ENV
+          fi
 
       - name: Download sailpoint-cli package
         run: |
