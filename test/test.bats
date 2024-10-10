@@ -13,7 +13,6 @@
     [ "$RESULT" = "prehire" ]
 }
 
-
 @test "Verify FormatGCPEmail Transform" {
     RESULT="$(~/sail transform preview --profile 8b9960eebbdd43029393edd9dcf25976 --identity 1d2d747380634a38a48f079422833ed6 --file transform_files/FormatGCPEmail.json -r)"
     [ "$RESULT" = "adam.kennedy@se-gcp.sailpointtechnologies.com" ]

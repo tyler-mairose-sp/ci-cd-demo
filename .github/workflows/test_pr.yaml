@@ -1,0 +1,36 @@
+name: "Test Transforms"
+
+env:
+  SAIL_CLIENT_ID: ${{ secrets.DEV_TENANT_CLIENT_ID }}
+  SAIL_CLIENT_SECRET: ${{ secrets.DEV_TENANT_CLIENT_SECRET }}
+  SAIL_BASE_URL: ${{ secrets.DEV_TENANT_BASE_URL }}
+  CLI_VERSION: 2.1.7
+
+on:
+  pull_request:
+    branches:
+      - dev
+  workflow_dispatch:
+
+jobs:
+  test_transforms:
+    name: Test Transforms
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+          submodules: 'true'
+
+      - name: Download sailpoint-cli package
+        run: |
+          wget https://github.com/sailpoint-oss/sailpoint-cli/releases/download/2.0/sail_${{ env.CLI_VERSION }}_linux_amd64.deb
+  
+      - name: Install sailpoint-cli
+        run: |
+          sudo dpkg -i sail_${{ env.CLI_VERSION }}_linux_amd64.deb
+    
+      - name:
+        run: |
+          test/bats/bin/bats --tap test
