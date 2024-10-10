@@ -1,0 +1,59 @@
+name: "Push Transforms"
+
+env:
+  CLI_VERSION: 2.1.8
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - dev
+    paths:
+      - "transform_files/**"
+
+jobs:
+  push_transforms:
+    name: Push Transforms
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+          submodules: 'true'
+      - name: Set Environment Variables based on branch
+        run: |
+          if [[ "${{ github.ref }}" == "main" ]]; then
+            echo "Setting environment for main branch"
+            echo "SAIL_CLIENT_ID=${{ secrets.PROD_TENANT_CLIENT_ID }}" >> $GITHUB_ENV
+            echo "SAIL_CLIENT_SECRET=${{ secrets.PROD_TENANT_CLIENT_SECRET }}" >> $GITHUB_ENV
+            echo "SAIL_BASE_URL=${{ secrets.PROD_TENANT_BASE_URL }}" >> $GITHUB_ENV
+          elif [[ "${{ github.ref }}" == "dev" ]]; then
+            echo "SAIL_CLIENT_ID=${{ secrets.DEV_TENANT_CLIENT_ID }}" >> $GITHUB_ENV
+            echo "SAIL_CLIENT_SECRET=${{ secrets.DEV_TENANT_CLIENT_SECRET }}" >> $GITHUB_ENV
+            echo "SAIL_BASE_URL=${{ secrets.DEV_TENANT_BASE_URL }}" >> $GITHUB_ENV
+          fi
+
+      - id: files
+        uses: jitterbit/get-changed-files@v1
+        with:
+          format: 'json'
+      - run: |
+          readarray -t added_transforms <<<"$(jq -r '.[]' <<<'${{ steps.files.outputs.added }}')"
+          for added_file in ${added_transforms[@]}; do
+            if [[ $added_file == transform_files/* ]]; then
+                echo "Do something with this ${added_file}."
+            else
+              echo "Skipping ${added_file}, not under transform_files/."
+            fi          
+          done
+      - run: |
+          readarray -t modified_transforms <<<"$(jq -r '.[]' <<<'${{ steps.files.outputs.modified }}')"
+          for modified_file in ${modified_transforms[@]}; do
+            if [[ $modified_file == transform_files/* ]]; then
+                echo "Do something with this ${modified_file}."
+            else
+              echo "Skipping ${modified_file}, not under transform_files/."
+            fi    
+          done
+    
