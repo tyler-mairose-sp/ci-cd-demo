@@ -19,6 +19,13 @@ jobs:
           submodules: 'true'
 
       - name: Run Transforms Mapping Script
+        id: mapTransforms
         run: |
           ls -al
           ./transform_mappings.sh
+    
+      - name: Commit changes and create new version tag
+        if: steps.mapTransforms.outcome == 'success'
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Map Transforms
