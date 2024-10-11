@@ -5,8 +5,8 @@ on:
     branches:
       - main
 jobs:
-  push_transforms:
-    name: Push Transforms
+  map_transforms_before_merge:
+    name: Map Transforms Before Merge
     runs-on: ubuntu-latest
     permissions:
       contents: write
