@@ -7,7 +7,7 @@ on:
 jobs:
   map_transforms_before_merge:
     name: Map Transforms Before Merge
-    runs-on: ubuntu-latest
+    runs-on: macos-14
     permissions:
       contents: write
     steps:
