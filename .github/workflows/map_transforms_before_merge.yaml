@@ -20,4 +20,5 @@ jobs:
 
       - name: Run Transforms Mapping Script
         run: |
+          ls -al
           ./transform_mappings.sh
