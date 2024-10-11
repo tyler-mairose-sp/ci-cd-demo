@@ -1,0 +1,23 @@
+name: "Map Transforms Before Merge"
+
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  push_transforms:
+    name: Push Transforms
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: 'true'
+
+      - name: Run Transforms Mapping Script
+        run: |
+          ./transform_mappings.sh
