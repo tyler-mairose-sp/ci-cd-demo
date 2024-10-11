@@ -32,3 +32,8 @@ setup() {
     RESULT="$(sail transform preview --profile $IDENTITY_PROFILE --identity $IDENTITY_ID --file transform_files/FormatGCPEmail.json -r)"
     [ "$RESULT" = "adam.kennedy@se-gcp.sailpointtechnologies.com" ]
 }
+
+@test "Verify FormatSailpointEmail Transform" {
+    RESULT="$(sail transform preview --profile $IDENTITY_PROFILE --identity $IDENTITY_ID --file transform_files/FormatSailpointEmail.json -r)"
+    [ "$RESULT" = "adam.kennedy@sailpoint.com" ]
+}
