@@ -43,4 +43,4 @@ jobs:
     
       - name:
         run: |
-          test/bats/bin/bats --tap test
+          environment='${{ github.base_ref }}' test/bats/bin/bats --tap test
