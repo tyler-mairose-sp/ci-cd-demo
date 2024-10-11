@@ -1,0 +1,23 @@
+{
+  "attributes": {
+    "values": [
+      {
+        "attributes": {
+          "attributeName": "EMAIL_ADDRESS_WORK",
+          "sourceName": "Workday"
+        },
+        "type": "accountAttribute"
+      },
+      {
+        "attributes": {
+          "value": "(none)"
+        },
+        "type": "static"
+      }
+    ]
+  },
+  "id": "cf5ac41a-b4a9-4c66-a0ec-d5a5cbfcc050",
+  "internal": false,
+  "name": "NoEmail",
+  "type": "firstValid"
+}

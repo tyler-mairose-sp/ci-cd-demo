@@ -1,0 +1,46 @@
+name: "Test Transforms"
+
+env:
+  CLI_VERSION: 2.1.8
+
+on:
+  pull_request:
+    branches:
+      - dev
+  workflow_dispatch:
+
+jobs:
+  test_transforms:
+    name: Test Transforms
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+          submodules: 'true'
+
+      - name: Set Environment Variables based on branch
+        run: |
+          if [[ "${{ github.base_ref }}" == "main" ]]; then
+            echo "Setting environment for main branch"
+            echo "SAIL_CLIENT_ID=${{ secrets.PROD_TENANT_CLIENT_ID }}" >> $GITHUB_ENV
+            echo "SAIL_CLIENT_SECRET=${{ secrets.PROD_TENANT_CLIENT_SECRET }}" >> $GITHUB_ENV
+            echo "SAIL_BASE_URL=${{ secrets.PROD_TENANT_BASE_URL }}" >> $GITHUB_ENV
+          elif [[ "${{ github.base_ref }}" == "dev" ]]; then
+            echo "SAIL_CLIENT_ID=${{ secrets.DEV_TENANT_CLIENT_ID }}" >> $GITHUB_ENV
+            echo "SAIL_CLIENT_SECRET=${{ secrets.DEV_TENANT_CLIENT_SECRET }}" >> $GITHUB_ENV
+            echo "SAIL_BASE_URL=${{ secrets.DEV_TENANT_BASE_URL }}" >> $GITHUB_ENV
+          fi
+
+      - name: Download sailpoint-cli package
+        run: |
+          wget https://github.com/sailpoint-oss/sailpoint-cli/releases/download/${{ env.CLI_VERSION }}/sail_${{ env.CLI_VERSION }}_linux_amd64.deb
+  
+      - name: Install sailpoint-cli
+        run: |
+          sudo dpkg -i sail_${{ env.CLI_VERSION }}_linux_amd64.deb
+    
+      - name:
+        run: |
+          test/bats/bin/bats --tap test

@@ -1,0 +1,22 @@
+{
+  "attributes": {
+    "values": [
+      {
+        "attributes": {
+          "input": {
+            "attributes": {
+              "name": "uid"
+            },
+            "type": "identityAttribute"
+          }
+        },
+        "type": "lower"
+      },
+      "@se-gcp.sailpointtechnologies.com"
+    ]
+  },
+  "id": "0d5151c5-5f34-4d38-8569-ea14eb8d92c4",
+  "internal": false,
+  "name": "Format GCP Email",
+  "type": "concat"
+}

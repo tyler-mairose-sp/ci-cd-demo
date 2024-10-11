@@ -1,0 +1,31 @@
+name: "Map Transforms Before Merge"
+
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  map_transforms_before_merge:
+    name: Map Transforms Before Merge
+    runs-on: macos-14
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: 'true'
+
+      - name: Run Transforms Mapping Script
+        id: mapTransforms
+        run: |
+          ls -al
+          ./transform_mappings.sh
+    
+      - name: Commit changes and create new version tag
+        if: steps.mapTransforms.outcome == 'success'
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Map Transforms

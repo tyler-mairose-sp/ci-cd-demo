@@ -1,0 +1,25 @@
+{
+  "attributes": {
+    "values": [
+      {
+        "attributes": {
+          "attributeName": "endDate",
+          "inputFormat": "MM/dd/yyyy",
+          "outputFormat": "ISO8601",
+          "sourceName": "Employee"
+        },
+        "type": "dateFormat"
+      },
+      {
+        "attributes": {
+          "value": "2199-01-01T00:00:00.000Z"
+        },
+        "type": "static"
+      }
+    ]
+  },
+  "id": "78cca0f8-9c84-4892-9775-e5de6cf552c3",
+  "internal": false,
+  "name": "ISO8601EndDateFormat",
+  "type": "firstValid"
+}

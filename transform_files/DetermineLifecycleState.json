@@ -1,0 +1,33 @@
+{
+  "attributes": {
+    "firstDate": {
+      "attributes": {
+        "name": "startDate"
+      },
+      "type": "identityAttribute"
+    },
+    "negativeCondition": {
+      "attributes": {
+        "firstDate": {
+          "attributes": {
+            "name": "endDate"
+          },
+          "type": "identityAttribute"
+        },
+        "negativeCondition": "inactive",
+        "operator": "gt",
+        "positiveCondition": "active",
+        "secondDate": "now"
+      },
+      "type": "dateCompare"
+    },
+    "operator": "gt",
+    "positiveCondition": "prehire",
+    "requiresPeriodicRefresh": "true",
+    "secondDate": "now"
+  },
+  "id": "aa615593-d707-4494-86dc-01b1ddb5e511",
+  "internal": false,
+  "name": "Determine Lifecycle State",
+  "type": "dateCompare"
+}

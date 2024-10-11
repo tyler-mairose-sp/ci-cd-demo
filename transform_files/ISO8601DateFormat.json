@@ -1,0 +1,10 @@
+{
+  "attributes": {
+    "inputFormat": "MM/dd/yyyy",
+    "outputFormat": "ISO8601"
+  },
+  "id": "bdf40aad-eb28-4212-89a8-2be072aef3a1",
+  "internal": false,
+  "name": "ISO8601DateFormat",
+  "type": "dateFormat"
+}
