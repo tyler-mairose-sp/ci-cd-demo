@@ -53,36 +53,36 @@ for transform_file in "${TRANSFORM_FILES[@]}"; do
   fi
 done
 
-# # Commit and push changes
-# if [[ "$BRANCH_NAME" == "dev" ]]; then
-# #   git add "$MAPPING_FILE"
-# #   git commit -m "Add/update multiple transform IDs in dev."
-# #   git push origin dev
+# Commit and push changes
+if [[ "$BRANCH_NAME" == "dev" ]]; then
+  git add "$MAPPING_FILE"
+  git commit -m "Add/update multiple transform IDs in dev."
+  git push origin dev
 
-# elif [[ "$BRANCH_NAME" == "main" ]]; then
-# #   git add "$MAPPING_FILE"
-# #   git commit -m "Update multiple transform IDs in main."
-# #   git push origin main
+elif [[ "$BRANCH_NAME" == "main" ]]; then
+  git add "$MAPPING_FILE"
+  git commit -m "Update multiple transform IDs in main."
+  git push origin main
 
-# #   # Switch to dev branch to update mappings.json with the new IDs
-# #   echo "Switching to dev branch to update the mappings with new transform IDs."
-# #   git checkout dev
+  # Switch to dev branch to update mappings.json with the new IDs
+  echo "Switching to dev branch to update the mappings with new transform IDs."
+  git checkout dev
 
-# #   # Process each transform file again to update the dev branch
-# #   for transform_file in "${TRANSFORM_FILES[@]}"; do
-# #     if [[ -f "$transform_file" ]]; then
-# #       update_mappings_file "$transform_file"
-# #     fi
-# #   done
+  # Process each transform file again to update the dev branch
+  for transform_file in "${TRANSFORM_FILES[@]}"; do
+    if [[ -f "$transform_file" ]]; then
+      update_mappings_file "$transform_file"
+    fi
+  done
 
-# #   # Commit and push changes to dev
-# #   git add "$MAPPING_FILE"
-# #   git commit -m "Update transform IDs with the new ones in dev."
-# #   git push origin dev
+  # Commit and push changes to dev
+  git add "$MAPPING_FILE"
+  git commit -m "Update transform IDs with the new ones in dev."
+  git push origin dev
 
-# #   # Switch back to main
-# #   git checkout main
-# fi
+  # Switch back to main
+  git checkout main
+fi
 
 # Log completion
 echo "Mappings updated successfully."
