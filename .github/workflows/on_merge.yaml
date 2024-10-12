@@ -81,21 +81,11 @@ jobs:
             fi    
           done
     
-      - name: Sync Transforms
+      - name: Sync Transforms and update transform mappings
         run: |
           sail transform download
-          
-          
-      - name: Update transform mappings
-        run: |
           git config --global user.email "tyler.mairose@sailpoint.com"
           git config --global user.name "tyler-mairose-sp"
+          git add .
+          git commit -m "Update transform with ID from Identity Security Cloud" 
           ./update_mappings.sh '${{ steps.files.outputs.added}}'
-    
-    #   - name: Commit changes and create new version tag
-    #     if: steps.addNewTransforms.outcome == 'success'
-    #     uses: stefanzweifel/git-auto-commit-action@v4
-    #     with:
-    #       commit_message: Sync transforms
-    #       commit_user_name: tyler-mairose-sp
-    #       commit_user_email: tyler.mairose@sailpoint.com
