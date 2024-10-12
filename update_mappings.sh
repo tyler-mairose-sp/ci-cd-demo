@@ -1,0 +1,88 @@
+#!/bin/bash
+
+# Ensure the script is called with a comma-separated list of file paths
+if [[ -z "$1" ]]; then
+  echo "Error: Please provide a comma-separated list of transform file paths."
+  exit 1
+fi
+
+# File paths
+MAPPING_FILE="mappings.json"
+
+# Convert comma-separated list of file paths into an array
+IFS=',' read -r -a TRANSFORM_FILES <<< "$1"
+
+# Check if we're in the dev or main branch
+BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+
+# Function to update the mappings.json file with id and name from the transform
+update_mappings_file() {
+  local transform_file="$1"
+  local new_transform_id
+  local transform_name
+  
+  # Create transform and get the ID and name
+  new_transform_id=$(jq -r '.id' < "$transform_file")
+  transform_name=$(jq -r '.name' < "$transform_file")
+
+  if [[ "$BRANCH_NAME" == "dev" ]]; then
+    # Add a new key with the transform name in dev
+    echo "Adding new transform ID and name to mappings.json in dev for $transform_name."
+    
+    # Add a new key with the new ID and set the value to the transform name
+    jq --arg id "$new_transform_id" --arg name "$transform_name" '.ids[$id] = $name' "$MAPPING_FILE" > tmp.$$.json && mv tmp.$$.json "$MAPPING_FILE"
+
+  elif [[ "$BRANCH_NAME" == "main" ]]; then
+    # Update the ID in main by replacing the name with the actual ID
+    echo "Updating transform ID in mappings.json in main for $transform_name."
+
+    # Find the matching key (the ID with the value being the transform name from dev) and update the value with the new ID from main
+    jq --arg name "$transform_name" --arg new_id "$new_transform_id" '.ids | to_entries[] | select(.value == $name) | .key' "$MAPPING_FILE" |
+    while read -r old_id; do
+      jq --arg old_id "$old_id" --arg new_id "$new_transform_id" '.ids[$old_id] = $new_id' "$MAPPING_FILE" > tmp.$$.json && mv tmp.$$.json "$MAPPING_FILE"
+    done
+  fi
+}
+
+# Process each transform file passed in the list
+for transform_file in "${TRANSFORM_FILES[@]}"; do
+  if [[ -f "$transform_file" ]]; then
+    update_mappings_file "$transform_file"
+  else
+    echo "Error: Transform file $transform_file not found."
+  fi
+done
+
+# # Commit and push changes
+# if [[ "$BRANCH_NAME" == "dev" ]]; then
+# #   git add "$MAPPING_FILE"
+# #   git commit -m "Add/update multiple transform IDs in dev."
+# #   git push origin dev
+
+# elif [[ "$BRANCH_NAME" == "main" ]]; then
+# #   git add "$MAPPING_FILE"
+# #   git commit -m "Update multiple transform IDs in main."
+# #   git push origin main
+
+# #   # Switch to dev branch to update mappings.json with the new IDs
+# #   echo "Switching to dev branch to update the mappings with new transform IDs."
+# #   git checkout dev
+
+# #   # Process each transform file again to update the dev branch
+# #   for transform_file in "${TRANSFORM_FILES[@]}"; do
+# #     if [[ -f "$transform_file" ]]; then
+# #       update_mappings_file "$transform_file"
+# #     fi
+# #   done
+
+# #   # Commit and push changes to dev
+# #   git add "$MAPPING_FILE"
+# #   git commit -m "Update transform IDs with the new ones in dev."
+# #   git push origin dev
+
+# #   # Switch back to main
+# #   git checkout main
+# fi
+
+# Log completion
+echo "Mappings updated successfully."

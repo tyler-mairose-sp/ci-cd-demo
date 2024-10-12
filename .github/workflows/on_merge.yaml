@@ -52,12 +52,12 @@ jobs:
       - id: files
         uses: jitterbit/get-changed-files@v1
         with:
-          format: 'json'
+          format: 'csv'
           
       - name: Add New Transforms
         id: addNewTransforms
         run: |
-          readarray -t added_transforms <<<"$(jq -r '.[]' <<<'${{ steps.files.outputs.added }}')"
+          mapfile -d ',' -t added_transforms < <(printf '%s,' '${{ steps.files.outputs.added}}')
           for added_file in ${added_transforms[@]}; do
             if [[ $added_file == transform_files/* ]]; then
                 echo "Do something with this ${added_file}."
@@ -70,7 +70,7 @@ jobs:
 
       - name: Update Transforms
         run: |
-          readarray -t modified_transforms <<<"$(jq -r '.[]' <<<'${{ steps.files.outputs.modified }}')"
+          mapfile -d ',' -t modified_transforms < <(printf '%s,' '${{ steps.files.outputs.modified}}')
           for modified_file in ${modified_transforms[@]}; do
             if [[ $modified_file == transform_files/* ]]; then
                 echo "Do something with this ${modified_file}."
@@ -82,12 +82,17 @@ jobs:
     
       - name: Sync Transforms
         run: |
-          sail transform download    
+          sail transform download
+          
+          
+      - name: Update transform mappings
+        run: |
+          ./update_mappings.sh '${{ steps.files.outputs.added}}'
     
-      - name: Commit changes and create new version tag
-        if: steps.addNewTransforms.outcome == 'success'
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Sync transforms
-          commit_user_name: tyler-mairose-sp
-          commit_user_email: tyler.mairose@sailpoint.com
+    #   - name: Commit changes and create new version tag
+    #     if: steps.addNewTransforms.outcome == 'success'
+    #     uses: stefanzweifel/git-auto-commit-action@v4
+    #     with:
+    #       commit_message: Sync transforms
+    #       commit_user_name: tyler-mairose-sp
+    #       commit_user_email: tyler.mairose@sailpoint.com

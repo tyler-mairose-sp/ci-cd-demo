@@ -6,6 +6,9 @@ MAPPING_FILE="mappings.json"
 # Directory containing the JSON files to modify
 TRANSFORM_DIR="transform_files"
 
+# UUID regex pattern to match the format
+UUID_PATTERN="^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+
 # Check if the mapping file exists
 if [ ! -f "$MAPPING_FILE" ]; then
   echo "Mapping file $MAPPING_FILE does not exist."
@@ -26,11 +29,16 @@ for file in "$TRANSFORM_DIR"/*.json; do
     
     # Read each mapping from the JSON file and replace IDs
     while IFS="=" read -r old_id new_id; do
-      echo "Replacing $old_id with $new_id in $file"
-      
-      # Use sed to replace the old ID with the new ID in the file
-      sed -i "" "s|$old_id|$new_id|g" "$file"
-      
+      # Only proceed if the old and new IDs match the UUID format
+      if [[ "$old_id" =~ $UUID_PATTERN && "$new_id" =~ $UUID_PATTERN ]]; then
+        echo "Replacing $old_id with $new_id in $file"
+        
+        # Use sed to replace the old ID with the new ID in the file
+        sed -i "" "s|$old_id|$new_id|g" "$file"
+      else
+        echo "Skipping invalid UUID format: $old_id or $new_id"
+      fi
+
     # Extract the ID mappings using jq and pass them to the loop
     done < <(jq -r '.ids | to_entries[] | "\(.key)=\(.value)"' "$MAPPING_FILE")
   fi
