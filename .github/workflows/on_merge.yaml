@@ -87,6 +87,8 @@ jobs:
           
       - name: Update transform mappings
         run: |
+          git config --global user.email "tyler.mairose@sailpoint.com"
+          git config --global user.name "tyler-mairose-sp"
           ./update_mappings.sh '${{ steps.files.outputs.added}}'
     
     #   - name: Commit changes and create new version tag
