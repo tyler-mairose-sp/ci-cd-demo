@@ -37,19 +37,19 @@ update_mappings_file() {
     echo "Updating transform ID in mappings.json in main for $transform_name."
 
     # Find the matching key (the ID with the value being the transform name from dev) and update the value with the new ID from main
-    jq --arg name "$transform_name" --arg new_id "$new_transform_id" '.ids | to_entries[] | select(.value == $name) | .key' "$MAPPING_FILE" |
-    while read -r old_id; do
-      jq --arg old_id "$old_id" --arg new_id "$new_transform_id" '.ids[$old_id] = $new_id' "$MAPPING_FILE" > tmp.$$.json && mv tmp.$$.json "$MAPPING_FILE"
-    done
+    jq --arg name "$transform_name" --arg new_id "$new_transform_id" '
+      .ids |= with_entries(if .value == $name then .value = $new_id else . end)
+    ' "$MAPPING_FILE" > tmp.$$.json && mv tmp.$$.json "$MAPPING_FILE"
   fi
 }
 
 # Process each transform file passed in the list
 for transform_file in "${TRANSFORM_FILES[@]}"; do
-  if [[ -f "$transform_file" ]]; then
+  # Check if the file exists and has a .json extension
+  if [[ -f "$transform_file" && "$transform_file" == *.json ]]; then
     update_mappings_file "$transform_file"
   else
-    echo "Error: Transform file $transform_file not found."
+    echo "Skipping non-JSON file or file not found: $transform_file"
   fi
 done
 
@@ -70,7 +70,7 @@ elif [[ "$BRANCH_NAME" == "main" ]]; then
 
   # Process each transform file again to update the dev branch
   for transform_file in "${TRANSFORM_FILES[@]}"; do
-    if [[ -f "$transform_file" ]]; then
+    if [[ -f "$transform_file" && "$transform_file" == *.json ]]; then
       update_mappings_file "$transform_file"
     fi
   done
