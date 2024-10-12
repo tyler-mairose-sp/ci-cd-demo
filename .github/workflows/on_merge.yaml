@@ -24,6 +24,7 @@ jobs:
           ref: ${{ github.ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
           submodules: 'true'
+          fetch-depth: 0
 
       - name: Set Environment Variables based on branch
         run: |
