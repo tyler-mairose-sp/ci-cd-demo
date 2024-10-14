@@ -31,8 +31,4 @@
   "internal": false,
   "name": "DeriveFirstNameLastInitial",
   "type": "upper"
-},
-    "internal": false,
-    "name": "DeriveFirstNameLastInitial",
-    "type": "upper"
-  }
+}
