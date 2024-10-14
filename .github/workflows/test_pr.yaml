@@ -7,6 +7,7 @@ on:
   pull_request:
     branches:
       - dev
+      - main
   workflow_dispatch:
 
 jobs:
@@ -43,4 +44,4 @@ jobs:
     
       - name:
         run: |
-          test/bats/bin/bats --tap test
+          environment='${{ github.base_ref }}' test/bats/bin/bats --tap test

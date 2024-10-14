@@ -1,0 +1,34 @@
+{
+    "attributes": {
+      "input": {
+        "attributes": {
+          "values": [
+            {
+              "attributes": {
+                "name": "firstname"
+              },
+              "type": "identityAttribute"
+            },
+            {
+                "attributes": {
+                  "begin": 0,
+                  "end": 1,
+                  "input": {
+                    "attributes": {
+                      "name": "lastname"
+                    },
+                    "type": "identityAttribute"
+                  }
+                },
+                "type": "substring"
+              }
+          ]
+        },
+        "type": "concat"
+      }
+    },
+    "id": "ba879bcd-028c-4e12-978c-663d1b763dab",
+    "internal": false,
+    "name": "DeriveFirstNameLastInitial",
+    "type": "upper"
+  }

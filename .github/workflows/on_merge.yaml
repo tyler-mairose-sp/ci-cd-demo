@@ -24,6 +24,7 @@ jobs:
           ref: ${{ github.ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
           submodules: 'true'
+          fetch-depth: 0
 
       - name: Set Environment Variables based on branch
         run: |
@@ -52,25 +53,27 @@ jobs:
       - id: files
         uses: jitterbit/get-changed-files@v1
         with:
-          format: 'json'
+          format: 'csv'
           
       - name: Add New Transforms
         id: addNewTransforms
         run: |
-          readarray -t added_transforms <<<"$(jq -r '.[]' <<<'${{ steps.files.outputs.added }}')"
+          mapfile -d ',' -t added_transforms < <(printf '%s,' '${{ steps.files.outputs.added}}')
           for added_file in ${added_transforms[@]}; do
             if [[ $added_file == transform_files/* ]]; then
                 echo "Do something with this ${added_file}."
 
                 sail transform create -f ${added_file}
+                rm ${added_file}
             else
               echo "Skipping ${added_file}, not under transform_files/."
             fi          
           done
 
       - name: Update Transforms
+        id: updateTransforms
         run: |
-          readarray -t modified_transforms <<<"$(jq -r '.[]' <<<'${{ steps.files.outputs.modified }}')"
+          mapfile -d ',' -t modified_transforms < <(printf '%s,' '${{ steps.files.outputs.modified}}')
           for modified_file in ${modified_transforms[@]}; do
             if [[ $modified_file == transform_files/* ]]; then
                 echo "Do something with this ${modified_file}."
@@ -80,14 +83,13 @@ jobs:
             fi    
           done
     
-      - name: Sync Transforms
+      - name: Sync Transforms and update transform mappings
+        if: steps.addNewTransforms.outcome == 'success' || steps.updateTransforms.outcome == 'success'
         run: |
-          sail transform download    
-    
-      - name: Commit changes and create new version tag
-        if: steps.addNewTransforms.outcome == 'success'
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Sync transforms
-          commit_user_name: tyler-mairose-sp
-          commit_user_email: tyler.mairose@sailpoint.com
+          sail transform download
+          git config --global user.email "tyler.mairose@sailpoint.com"
+          git config --global user.name "tyler-mairose-sp"
+
+          git status
+
+          ./update_mappings.sh '${{ steps.files.outputs.added}}'
