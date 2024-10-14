@@ -75,11 +75,12 @@ elif [[ "$BRANCH_NAME" == "main" ]]; then
   git checkout dev
 
   # Pull the latest transforms so that we can map the IDs correctly
+  rm -rf transform_files
   sail transform download 
 
   # Process each transform file again to update the dev branch
   for transform_file in "${TRANSFORM_FILES[@]}"; do
-    if [[ -f "$transform_file" && "$transform_file" == *.json ]]; then
+    if [[ -f "$transform_file" && "$transform_file" == *.json && "$transform_file" == *transform_files* ]]; then
       update_mappings_file "$transform_file"
     fi
   done
@@ -91,8 +92,25 @@ elif [[ "$BRANCH_NAME" == "main" ]]; then
   git commit -m "Update transform IDs with the new ones in dev."
   git push origin dev
 
+  # Reset the changes so that we can switch back to main
+  git reset --hard HEAD
+
   # Switch back to main
   git checkout main
+
+  sail transform download
+
+  for transform_file in "${TRANSFORM_FILES[@]}"; do
+    if [[ -f "$transform_file" && "$transform_file" == *.json && "$transform_file" == *transform_files* ]]; then
+      git add "$transform_file"
+    fi
+  done
+
+  git status
+
+  git commit -m "Update transforms with ID from Identity Security Cloud"
+
+  git push origin main
 fi
 
 # Log completion

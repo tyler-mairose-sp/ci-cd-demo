@@ -27,6 +27,8 @@
         "type": "concat"
       }
     },
+    "id": "ba879bcd-028c-4e12-978c-663d1b763dab",
+    "internal": false,
     "name": "DeriveFirstNameLastInitial",
     "type": "upper"
   }
