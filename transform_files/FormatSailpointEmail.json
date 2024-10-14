@@ -1,0 +1,22 @@
+{
+  "attributes": {
+    "values": [
+      {
+        "attributes": {
+          "input": {
+            "attributes": {
+              "name": "uid"
+            },
+            "type": "identityAttribute"
+          }
+        },
+        "type": "lower"
+      },
+      "@sailpoint.com"
+    ]
+  },
+  "id": "474fefdb-87a3-4a74-91ba-a4b9075cb207",
+  "internal": false,
+  "name": "Format Sailpoint Email",
+  "type": "concat"
+}
