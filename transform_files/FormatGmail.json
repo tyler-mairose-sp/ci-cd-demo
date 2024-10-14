@@ -1,0 +1,20 @@
+{
+    "attributes": {
+      "values": [
+        {
+          "attributes": {
+            "input": {
+              "attributes": {
+                "name": "uid"
+              },
+              "type": "identityAttribute"
+            }
+          },
+          "type": "lower"
+        },
+        "@gmail.com"
+      ]
+    },
+    "name": "FormatGmail",
+    "type": "concat"
+  }

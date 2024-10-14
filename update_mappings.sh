@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Pull the latest transforms to get the new IDs
+rm -rf transform_files
+sail transform download
+
+sleep 5
+
 # Ensure the script is called with a comma-separated list of file paths
 if [[ -z "$1" ]]; then
   echo "Error: Please provide a comma-separated list of transform file paths."
@@ -58,12 +64,6 @@ for transform_file in "${TRANSFORM_FILES[@]}"; do
     echo "Skipping non-JSON file or file not found: $transform_file"
   fi
 done
-
-# Pull the latest transforms to get the new IDs
-rm -rf transform_files
-sail transform download
-
-sleep 5
 
 # Commit and push changes
 if [[ "$BRANCH_NAME" == "dev" ]]; then
