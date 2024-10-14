@@ -68,6 +68,9 @@ elif [[ "$BRANCH_NAME" == "main" ]]; then
   echo "Switching to dev branch to update the mappings with new transform IDs."
   git checkout dev
 
+  # Pull the latest transforms so that we can map the IDs correctly
+  sail transform download 
+
   # Process each transform file again to update the dev branch
   for transform_file in "${TRANSFORM_FILES[@]}"; do
     if [[ -f "$transform_file" && "$transform_file" == *.json ]]; then
