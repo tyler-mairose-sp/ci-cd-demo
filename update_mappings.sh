@@ -52,7 +52,7 @@ update_mappings_file() {
 # Process each transform file passed in the list
 for transform_file in "${TRANSFORM_FILES[@]}"; do
   # Check if the file exists and has a .json extension
-  if [[ -f "$transform_file" && "$transform_file" == *.json ]]; then
+  if [[ -f "$transform_file" && "$transform_file" == *.json && "$transform_file" == *transform_files* ]]; then
     update_mappings_file "$transform_file"
   else
     echo "Skipping non-JSON file or file not found: $transform_file"
@@ -62,6 +62,13 @@ done
 # Commit and push changes
 if [[ "$BRANCH_NAME" == "dev" ]]; then
   git add "$MAPPING_FILE"
+  
+  for transform_file in "${TRANSFORM_FILES[@]}"; do
+    if [[ -f "$transform_file" && "$transform_file" == *.json && "$transform_file" == *transform_files* ]]; then
+      git add "$transform_file"
+    fi
+  done
+
   git commit -m "Add/update multiple transform IDs in dev."
   git push origin dev
 
