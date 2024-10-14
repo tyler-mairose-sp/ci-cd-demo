@@ -10,7 +10,11 @@ fi
 MAPPING_FILE="mappings.json"
 
 # Convert comma-separated list of file paths into an array
-IFS=',' read -r -a TRANSFORM_FILES <<< "$1"
+if [[ "$1" == *,* ]]; then
+    IFS=',' read -r -a TRANSFORM_FILES <<< "$1"
+else
+    TRANSFORM_FILES=("$1")
+fi
 
 # Check if we're in the dev or main branch
 BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
@@ -24,6 +28,8 @@ update_mappings_file() {
   # Create transform and get the ID and name
   new_transform_id=$(jq -r '.id' < "$transform_file")
   transform_name=$(jq -r '.name' < "$transform_file")
+
+  echo "Processing transform: $transform_name with ID: $new_transform_id"
 
   if [[ "$BRANCH_NAME" == "dev" ]]; then
     # Add a new key with the transform name in dev
