@@ -84,6 +84,8 @@ elif [[ "$BRANCH_NAME" == "main" ]]; then
     fi
   done
 
+  git status
+  
   # Commit and push changes to dev
   git add "$MAPPING_FILE"
   git commit -m "Update transform IDs with the new ones in dev."

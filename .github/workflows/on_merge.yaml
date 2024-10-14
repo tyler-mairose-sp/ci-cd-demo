@@ -64,12 +64,14 @@ jobs:
                 echo "Do something with this ${added_file}."
 
                 sail transform create -f ${added_file}
+                rm ${added_file}
             else
               echo "Skipping ${added_file}, not under transform_files/."
             fi          
           done
 
       - name: Update Transforms
+        id: updateTransforms
         run: |
           mapfile -d ',' -t modified_transforms < <(printf '%s,' '${{ steps.files.outputs.modified}}')
           for modified_file in ${modified_transforms[@]}; do
@@ -82,10 +84,27 @@ jobs:
           done
     
       - name: Sync Transforms and update transform mappings
+        if: steps.addNewTransforms.outcome == 'success' || steps.updateTransforms.outcome == 'success'
         run: |
           sail transform download
           git config --global user.email "tyler.mairose@sailpoint.com"
           git config --global user.name "tyler-mairose-sp"
+
+          git status
+
           ./update_mappings.sh '${{ steps.files.outputs.added}}'
-          git add .
+
+
+          mapfile -d ',' -t added_transforms < <(printf '%s,' '${{ steps.files.outputs.added}}')
+          for added_file in ${added_transforms[@]}; do
+            if [[ $added_file == transform_files/* ]]; then
+                echo "Do something with this ${added_file}."
+
+                git add ${added_file}
+            else
+              echo "Skipping ${added_file}, not under transform_files/."
+            fi          
+          done
+
+          git status
           git commit -m "Update transform with ID from Identity Security Cloud" 
