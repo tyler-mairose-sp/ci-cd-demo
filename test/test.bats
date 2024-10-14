@@ -37,3 +37,8 @@ setup() {
     RESULT="$(sail transform preview --profile $IDENTITY_PROFILE --identity $IDENTITY_ID --file transform_files/FormatSailpointEmail.json -r)"
     [ "$RESULT" = "adam.kennedy@sailpoint.com" ]
 }
+
+@test "Verify DeriveFirstNameLastInitial Transform" {
+    RESULT="$(sail transform preview --profile $IDENTITY_PROFILE --identity $IDENTITY_ID --file transform_files/DeriveFirstNameLastInitial.json -r)"
+    [ "$RESULT" = "ADAMK" ]
+}
