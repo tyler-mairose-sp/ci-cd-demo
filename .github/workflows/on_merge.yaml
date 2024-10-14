@@ -86,7 +86,6 @@ jobs:
       - name: Sync Transforms and update transform mappings
         if: steps.addNewTransforms.outcome == 'success' || steps.updateTransforms.outcome == 'success'
         run: |
-          sail transform download
           git config --global user.email "tyler.mairose@sailpoint.com"
           git config --global user.name "tyler-mairose-sp"
 
