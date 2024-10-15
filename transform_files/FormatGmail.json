@@ -1,0 +1,22 @@
+{
+  "attributes": {
+    "values": [
+      {
+        "attributes": {
+          "input": {
+            "attributes": {
+              "name": "uid"
+            },
+            "type": "identityAttribute"
+          }
+        },
+        "type": "lower"
+      },
+      "@gmail.com"
+    ]
+  },
+  "id": "ab4fd281-27af-4dfd-a243-0ee7aca9cf16",
+  "internal": false,
+  "name": "FormatGmail",
+  "type": "concat"
+}

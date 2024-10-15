@@ -64,7 +64,6 @@ jobs:
                 echo "Do something with this ${added_file}."
 
                 sail transform create -f ${added_file}
-                rm ${added_file}
             else
               echo "Skipping ${added_file}, not under transform_files/."
             fi          
@@ -86,7 +85,6 @@ jobs:
       - name: Sync Transforms and update transform mappings
         if: steps.addNewTransforms.outcome == 'success' || steps.updateTransforms.outcome == 'success'
         run: |
-          sail transform download
           git config --global user.email "tyler.mairose@sailpoint.com"
           git config --global user.name "tyler-mairose-sp"
 
